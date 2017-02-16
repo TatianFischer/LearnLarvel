@@ -11,10 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/tasks', 'TasksController@index');
 
-Route::get('about', function () {
-	return view('about');
-}); 
+Route::get('/tasks/{task}', 'TasksController@show');
+
+Route::get('/', 'PostsController@index');
+
+//Route::get('/posts/{post}', 'PostsController@show');
+
+Route::get('/posts/create', 'PostsController@create');
