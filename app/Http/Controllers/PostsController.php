@@ -10,12 +10,16 @@ class PostsController extends Controller
 {
     public function index()
     {
-    	return view('posts.index');
+    	$posts = Post::latest()->get();
+
+        return view('posts.index', compact('posts'));
     }
 
-    public function show()
+    public function show(Post $post)
     {
-    	return view('posts.show');
+    	//$post = Post::find($id);
+
+        return view('posts.show', compact('post'));
     }
 
     public function create()
@@ -25,8 +29,13 @@ class PostsController extends Controller
 
     public function store()
     {
-    
-        // Create a new postvusing the request data
+        // vérification des datas
+        $this->validate(request(), [
+            'title' => 'required',
+            'body' => 'required'
+        ]);
+
+        // Create a new post using the request data
 
         //$post = new Post;
 
@@ -40,10 +49,13 @@ class PostsController extends Controller
 
         // Jamais de create(request()->all())
 
-        Post::create([
+        /*Post::create([
             'title' => request('title'),
             'body' => request('body'),
-        ]);
+        ]);*/
+
+
+        Post::create(request(['title', 'body']));
 
         // And then redirect to the home page.
 
