@@ -8,6 +8,14 @@ use App\Post;
 
 class PostsController extends Controller
 {
+    
+    // Seuls les personnes authentifiées pourront écrire des posts
+
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+
     public function index()
     {
     	$posts = Post::latest()->get();
@@ -35,27 +43,9 @@ class PostsController extends Controller
             'body' => 'required'
         ]);
 
-        // Create a new post using the request data
-
-        //$post = new Post;
-
-        //$post->title = request('title');
-
-        //$post->body = request('body');
-
-        // Save it to the database
-
-        //$post->save();
-
-        // Jamais de create(request()->all())
-
-        /*Post::create([
-            'title' => request('title'),
-            'body' => request('body'),
-        ]);*/
-
-
-        Post::create(request(['title', 'body']));
+        auth()->user()->publish(
+            new Post(request(['title', 'body']))
+        );
 
         // And then redirect to the home page.
 
